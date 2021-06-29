@@ -10,6 +10,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.sql.*;
@@ -48,21 +49,19 @@ public class Controller implements Initializable {
     private Button btnDelete;
 
     @FXML
-    private void buttonInsert(ActionEvent event) {
+    private void buttonHandler(ActionEvent event) {
         if (event.getSource() == btnInsert) {
             System.out.println("Button insert");
             insertBook();
         }
-    }
-
-    @FXML
-    private void buttonUpdate(ActionEvent event) {
-        updateBook();
-    }
-
-    @FXML
-    private void buttonDelete(ActionEvent event) {
-        deleteBook();
+        if (event.getSource() == btnUpdate) {
+            System.out.println("Button update");
+            updateBook();
+        }
+        if (event.getSource() == btnDelete) {
+            System.out.println("Button delete");
+            deleteBook();
+        }
     }
 
     @Override
@@ -136,7 +135,6 @@ public class Controller implements Initializable {
                 "year = " + textFieldYear.getText() + "," +
                 "pages = " + textFieldPages.getText() +
                 " WHERE id = " + textFieldID.getText() + "";
-        System.out.println(query);
         executeQuery(query);
         showBooks();
     }
@@ -145,6 +143,16 @@ public class Controller implements Initializable {
         String query = "DELETE FROM books WHERE id = " + textFieldID.getText();
         executeQuery(query);
         showBooks();
+    }
+
+    @FXML
+    private void tableBooksMouseClicked(MouseEvent mouseEvent) {
+        Books book = tableBook.getSelectionModel().getSelectedItem();
+        textFieldID.setText(String.valueOf(book.getId()));
+        textFieldTitle.setText(book.getTitle());
+        textFieldAuthor.setText(book.getAuthor());
+        textFieldYear.setText(String.valueOf(book.getYear()));
+        textFieldPages.setText(String.valueOf(book.getPages()));
     }
 
     private void executeQuery(String query) {
